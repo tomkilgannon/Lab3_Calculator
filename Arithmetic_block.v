@@ -24,9 +24,9 @@ module Arithmetic_Block (
     assign mul_result = X * Y;
 
     // Multiplexer Logic
-  assign selected_result = (OP == PLUS_CODE) ? add_result : 
-    (OP == MULTIPLY_CODE) ? mul_result : 
-      24'b0; // Default to 0 if OP is invalid (again just different to Mihai's OP codes)
+    assign selected_result = (OP == PLUS_CODE) ? add_result : 
+                             (OP == MULTIPLY_CODE) ? mul_result : 
+                             24'b0; // Default to 0 if OP is invalid (again just different to Mihai's OP codes)
 
     // Register for the Result
     always @(posedge clk or posedge reset) begin
@@ -38,6 +38,6 @@ module Arithmetic_Block (
     end
 
     //Overflow Logic
-  assign overflow = (selected_result > 24'hFFFFFF);
+    assign overflow = (selected_result > 24'hFFFFFF);
 
 endmodule
