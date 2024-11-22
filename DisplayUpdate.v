@@ -5,6 +5,7 @@ module DisplayUpdate (
     input [23: 0] load_val, // Value to be loaded in the X register
     input new_digit, // Flag - new digit was pressed on the keypad
     input [3: 0] code, // Code of the pressed digit
+    input new_op,
 
     output reg [23: 0] X, // Value to be displayed
     output reg [2: 0] digit_count // Number of digits to be displayed
@@ -29,9 +30,9 @@ end
 
 assign shifted_X = {X[19: 0], code};
 //   If there's a new digit and there is still space on the screen
-assign proc_X = (new_digit & ~max_digits) ? shifted_X : X;
+assign proc_X = (new_digit == 1'b1 && max_digits == 1'b0) ? shifted_X : X;
 
-assign new_X = (load == 1'b1) ? load_val : proc_X;
+assign new_X = (new_op == 1'b1) ? 24'd0 : (load == 1'b1) ? load_val : proc_X;
 
 // Digit counter register
 always @ (posedge clock or posedge reset) begin
@@ -43,7 +44,7 @@ end
 
 always @ (load, value_to_add, digit_count) begin
     if (load == 1'b1) begin
-        new_digit_count = 3'd6;
+        new_digit_count = 3'd0;
     end
     else begin
         new_digit_count = digit_count + value_to_add;
